@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <script src="https://d3js.org/d3.v6.min.js"></script>
+        <title>Basic bar graph using D3.js</title>
+    </head>
+    <body>
+        <svg></svg>
+        <script>
+            const dataset = [
+                {
+                    month: "Jan",
+                    value: 3
+                },
+                {
+                    month: "Feb",
+                    value: 14
+                },
+                {
+                    month: "Mar",
+                    value: 25
+                },
+                {
+                    month: "Apr",
+                    value: 25
+                },
+                {
+                    month: "May",
+                    value: 12
+                },
+                {
+                    month: "Jun",
+                    value: 18
+                },
+                {
+                    month: "Jul",
+                    value: 18
+                },
+                {
+                    month: "Aug",
+                    value: 21
+                },
+                {
+                    month: "Sep",
+                    value: 17
+                },
+                {
+                    month: "Oct",
+                    value: 2
+                },
+                {
+                    month: "Nov",
+                    value: 3
+                },
+                {
+                    month: "Dec",
+                    value: 31
+                }
+            ];
+
+            // Selecting the svg element
+            const svg = d3
+                .select("svg")
+                .attr("width", 700)
+                .attr("height", 700)
+                .append("g")
+                .attr("transform", "translate(60, 30)");
+
+            // Adding X axis
+            const x = d3
+                .scaleBand()
+                .range([0, 600])
+                .domain(
+                    dataset.map(function(d) {
+                        return d.month;
+                    })
+                )
+                .padding(0.2);
+
+            svg.append("g")
+                .attr("transform", "translate(0,600)")
+                .call(d3.axisBottom(x))
+                .selectAll("text")
+                .style("text-anchor", "middle");
+
+            // Adding Y axis
+            const y = d3
+                .scaleLinear()
+                .domain([0, 30])
+                .range([600, 0]);
+
+            svg.append("g").call(d3.axisLeft(y));
+
+            // Appending bars to the graph
+            svg.selectAll("bar")
+                .data(dataset)
+                .enter()
+                .append("rect")
+                .attr("x", function(d) {
+                    return x(d.month);
+                })
+                .attr("y", function(d) {
+                    return y(d.value);
+                })
+                .attr("width", x.bandwidth())
+                .attr("height", function(d) {
+                    return 600 - y(d.value);
+                })
+                .attr("fill", "#ffb3b8");
+        </script>
+    </body>
+</html>
